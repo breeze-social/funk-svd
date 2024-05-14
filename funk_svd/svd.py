@@ -60,7 +60,7 @@ class SVD:
 
     def __init__(self, lr=.005, reg=.02, n_epochs=20, n_factors=100,
                  early_stopping=False, shuffle=False, min_delta=.001,
-                 min_rating=1, max_rating=5):
+                 min_rating=1, max_rating=5, random_state=None):
 
         self.lr = lr
         self.reg = reg
@@ -71,6 +71,7 @@ class SVD:
         self.min_delta = min_delta
         self.min_rating = min_rating
         self.max_rating = max_rating
+        self.random_state = random_state
 
     @_timer(text='\nTraining took ')
     def fit(self, X, X_val=None):
@@ -162,7 +163,7 @@ class SVD:
         n_users = len(np.unique(X[:, 0]))
         n_items = len(np.unique(X[:, 1]))
 
-        bu, bi, pu, qi = _initialization(n_users, n_items, self.n_factors)
+        bu, bi, pu, qi = _initialization(n_users, n_items, self.n_factors, self.random_state)
 
         # Run SGD
         for epoch_ix in range(self.n_epochs):
