@@ -10,8 +10,16 @@ train = df.sample(frac=0.8, random_state=7)
 val = df.drop(train.index.tolist()).sample(frac=0.5, random_state=8)
 test = df.drop(train.index.tolist()).drop(val.index.tolist())
 
-svd = SVD(lr=0.001, reg=0.005, n_epochs=100, n_factors=15, early_stopping=True,
-          shuffle=False, min_rating=1, max_rating=5)
+svd = SVD(lr=0.001, reg=0.005, n_epochs=100, n_factors=15, early_stopping=True, shuffle=False, min_rating=1,
+          max_rating=5, random_state=42)
+
+# Fit and predict using SVD 3 times, store the predictions in a list and check their equality
+preds = []
+for i in range(3):
+    svd.fit(X=train, X_val=val)
+    preds.append(svd.predict(test))
+
+assert all([preds[0] == pred for pred in preds[1:]]), 'Predictions are not the same'
 
 svd.fit(X=train, X_val=val)
 

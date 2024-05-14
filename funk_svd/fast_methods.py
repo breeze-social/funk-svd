@@ -18,11 +18,12 @@ def _shuffle(X):
 
 
 @njit
-def _initialization(n_users, n_items, n_factors):
+def _initialization(n_users, n_items, n_factors, random_state=None):
     """Initializes biases and latent factor matrices.
 
     Parameters
     ----------
+    random_state
     n_users : int
         Number of unique users.
     n_items : int
@@ -41,6 +42,10 @@ def _initialization(n_users, n_items, n_factors):
     qi : numpy.array
         Item latent factors matrix.
     """
+
+    if random_state is not None:
+        np.random.seed(random_state)
+
     bu = np.zeros(n_users)
     bi = np.zeros(n_items)
 
